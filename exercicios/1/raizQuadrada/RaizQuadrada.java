@@ -9,5 +9,6 @@ class RaizQuadrada {
       System.exit(1);
     }
     System.out.println(Math. sqrt (numeroEntrada));
+    entrada.close();
   }
 }
