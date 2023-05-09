@@ -2,8 +2,15 @@ import java.util.Scanner;
 
 public class CaixaEletronico {
     Scanner entrada = new Scanner(System.in);
-    ContaBancaria contaBancaria;
+    ContaBancaria[] contasBancarias;
     Double limitePadrao = 200.0;
+    Integer quantidadeContasPermitido = 2;
+    Integer quantidadeContas;
+
+    public CaixaEletronico() {
+        contasBancarias = new ContaBancaria[quantidadeContasPermitido];
+        quantidadeContas = 0;
+    }
 
     public void executar() {
         while (true) {
@@ -22,6 +29,7 @@ public class CaixaEletronico {
         System.out.println("2. Consultar Saldo");
         System.out.println("3. Depositar");
         System.out.println("4. Sacar");
+        System.out.println("10. Debug");
         System.out.println("5. Sair");
     }
     
@@ -29,7 +37,7 @@ public class CaixaEletronico {
         switch (opcao) {
             case 1:
                 Cliente cliente = criarCliente();
-                criarConta(cliente);
+                criarContas(cliente);
                 break;
             case 2:
                 consultarSaldo();
@@ -45,7 +53,16 @@ public class CaixaEletronico {
         }
     }
 
-    public void criarConta(Cliente cliente) {
+    private void criarContas(Cliente cliente) {
+        for(int i = 0; i < quantidadeContasPermitido; i++) {
+            ContaBancaria contaBancaria = criarConta(cliente);
+            contasBancarias[i] = contaBancaria;
+        }
+    }
+
+    private ContaBancaria criarConta(Cliente cliente) {
+        ContaBancaria contaBancaria;
+        System.out.println("Vamos abrir uma nova conta!");
         System.out.println("O cliente possui saldo?(Y/n)");
         String usuarioPossuiSaldo = entrada.nextLine();
         if(usuarioPossuiSaldo.equals("n")) {
@@ -55,6 +72,8 @@ public class CaixaEletronico {
             Double saldoInicialConta = Double.parseDouble(entrada.nextLine());
             contaBancaria = new ContaBancaria(cliente, limitePadrao, saldoInicialConta);
         }
+        System.out.println("Número da conta criada: " + contaBancaria.getNumeroConta() + '\n');
+        return contaBancaria;
     }
 
     private Cliente criarCliente() {
@@ -66,45 +85,66 @@ public class CaixaEletronico {
     }
 
     public void consultarSaldo() {
-        String mensagem = "Nenhuma conta bancária cadastrada";
+        Integer numeroConta = getNumeroConta();
+        ContaBancaria contaBancaria = getContaBancaria(numeroConta);
+        String mensagem = "Conta não encontrada!";
         if(contaBancaria != null) {
             mensagem = 
-            contaBancaria.getNomeTitular() + '\n' + 
-            contaBancaria.getNumeroConta() + '\n' +
-            "Saldo: " + contaBancaria.getSaldo();
+                contaBancaria.getNomeTitular() + '\n' + 
+                contaBancaria.getNumeroConta() + '\n' +
+                "Saldo: " + contaBancaria.getSaldo() + '\n';
         }
         System.out.println(mensagem);
     }
 
     public void realizarDeposito() {
+        Integer numeroConta = getNumeroConta();
+        ContaBancaria contaBancaria = getContaBancaria(numeroConta);
         if(contaBancaria == null) {
-            System.out.println("Nenhuma conta bancária cadastrada");
+            System.out.println("Conta não encontrada!");
             return;
         }
-        System.out.println("Qual o valor do depósito ?");
         double valorDeposito = getValor();
         boolean depositoOk = contaBancaria.executarDeposito(valorDeposito);
-        
         String resultadoDeposito = "Falha para realizar depósito!";
         if(depositoOk) resultadoDeposito = "Depósito realizado com sucesso!";
         System.out.println(resultadoDeposito);
     }
 
     public void realizarSaque() {
+        Integer numeroConta = getNumeroConta();
+        ContaBancaria contaBancaria = getContaBancaria(numeroConta);
         if(contaBancaria == null) {
-            System.out.println("Nenhuma conta bancária cadastrada");
+            System.out.println("Conta não encontrada!");
             return;
         }
-        System.out.println("Qual o valor do saque ?");       
         double valorSaque = getValor();
         boolean saqueOk = contaBancaria.executarSaque(valorSaque);
-        
         String resultadoSaque = "Falha ao sacar!";
         if(saqueOk) resultadoSaque = "Saque realizado com sucesso!";
         System.out.println(resultadoSaque);
     }
-    
+
     private double getValor() {
+        System.out.println("Qual o valor?"); 
         return Double.parseDouble(entrada.nextLine());
+    }
+
+    private Integer getNumeroConta() {
+        System.out.println("Qual número da conta?");
+        return Integer.parseInt(entrada.nextLine());
+    }
+
+    private ContaBancaria getContaBancaria(Integer numeroConta) {
+        for(int i = 0; i < quantidadeContasPermitido; i++) {
+            System.out.println("numeroDaConta: " + contasBancarias[i].getNumeroConta());
+            if(
+                contasBancarias[i] instanceof ContaBancaria &&
+                contasBancarias[i].getNumeroConta() == numeroConta
+            ) {
+                return contasBancarias[i];
+            }
+        }
+        return null;
     }
 }
