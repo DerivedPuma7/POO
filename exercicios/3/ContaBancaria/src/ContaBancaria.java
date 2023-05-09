@@ -2,11 +2,23 @@ public class ContaBancaria {
     private double saldo;
     private double limite;
     private Cliente cliente;
+    private Integer numeroConta;
+    private static Integer numeroUltimaConta = 100;
 
-    public ContaBancaria(Cliente cliente) {
-        saldo = 0;
-        limite = 200;
+    public ContaBancaria(Cliente cliente, double limite, double saldo) {
+        this.limite = limite;
         this.cliente = cliente;
+        this.saldo = saldo;
+        numeroUltimaConta++;
+        numeroConta = numeroUltimaConta;
+    }
+
+    public ContaBancaria(Cliente cliente, double limite) {
+        this.limite = limite;
+        this.cliente = cliente;
+        this.saldo = 0;
+        numeroUltimaConta++;
+        numeroConta = numeroUltimaConta;
     }
 
     public double getSaldo() {
@@ -38,5 +50,9 @@ public class ContaBancaria {
 
     public String getNomeTitular() {
         return cliente.getNome();
+    }
+
+    public Integer getNumeroConta() {
+        return numeroConta;
     }
 }
