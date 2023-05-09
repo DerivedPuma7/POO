@@ -48,10 +48,18 @@ public class CaixaEletronico {
     }
 
     public void consultarSaldo() {
-        System.out.println(contaBancaria.getSaldo());
+        String mensagem = "Nenhuma conta bancária cadastrada";
+        if(contaBancaria != null) {
+            mensagem = "Saldo: " + contaBancaria.getSaldo();
+        }
+        System.out.println(mensagem);
     }
 
     public void realizarDeposito() {
+        if(contaBancaria == null) {
+            System.out.println("Nenhuma conta bancária cadastrada");
+            return;
+        }
         System.out.println("Qual o valor do depósito ?");
         double valorDeposito = getValor();
         boolean depositoOk = contaBancaria.executarDeposito(valorDeposito);
@@ -62,6 +70,10 @@ public class CaixaEletronico {
     }
 
     public void realizarSaque() {
+        if(contaBancaria == null) {
+            System.out.println("Nenhuma conta bancária cadastrada");
+            return;
+        }
         System.out.println("Qual o valor do saque ?");       
         double valorSaque = getValor();
         boolean saqueOk = contaBancaria.executarSaque(valorSaque);
