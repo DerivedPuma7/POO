@@ -1,10 +1,12 @@
 public class ContaBancaria {
     private double saldo;
     private double limite;
+    private Cliente cliente;
 
-    public ContaBancaria() {
+    public ContaBancaria(Cliente cliente) {
         saldo = 0;
         limite = 200;
+        this.cliente = cliente;
     }
 
     public double getSaldo() {
@@ -32,5 +34,9 @@ public class ContaBancaria {
 
     private boolean validarDeposito(double valorDeposito) {
         return valorDeposito > 0;
+    }
+
+    public String getNomeTitular() {
+        return cliente.getNome();
     }
 }

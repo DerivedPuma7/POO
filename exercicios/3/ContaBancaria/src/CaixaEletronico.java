@@ -44,13 +44,25 @@ public class CaixaEletronico {
     }
 
     public void criarConta() {
-        contaBancaria = new ContaBancaria();
+        Cliente cliente = criarCliente();
+        contaBancaria = new ContaBancaria(cliente);
+    }
+
+    private Cliente criarCliente() {
+        System.out.println("Qual o nome do cliente?");
+        String nomeCliente =  entrada.nextLine();
+        System.out.println("Qual o cpf do cliente?");
+        String cpfCliente =  entrada.nextLine();
+        return new Cliente(nomeCliente, cpfCliente);
     }
 
     public void consultarSaldo() {
         String mensagem = "Nenhuma conta bancária cadastrada";
         if(contaBancaria != null) {
-            mensagem = "Saldo: " + contaBancaria.getSaldo();
+            mensagem = 
+            contaBancaria.getNomeTitular() + 
+            '\n' + 
+            "Saldo: " + contaBancaria.getSaldo();
         }
         System.out.println(mensagem);
     }
