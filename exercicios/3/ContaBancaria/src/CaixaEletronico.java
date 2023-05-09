@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class CaixaEletronico {
     Scanner entrada = new Scanner(System.in);
     ContaBancaria contaBancaria;
+    Double limitePadrao = 200.0;
 
     public void executar() {
         while (true) {
@@ -27,7 +28,8 @@ public class CaixaEletronico {
     public void tratarOpcao(int opcao) {
         switch (opcao) {
             case 1:
-                criarConta();
+                Cliente cliente = criarCliente();
+                criarConta(cliente);
                 break;
             case 2:
                 consultarSaldo();
@@ -43,9 +45,16 @@ public class CaixaEletronico {
         }
     }
 
-    public void criarConta() {
-        Cliente cliente = criarCliente();
-        contaBancaria = new ContaBancaria(cliente);
+    public void criarConta(Cliente cliente) {
+        System.out.println("O cliente possui saldo?(Y/n)");
+        String usuarioPossuiSaldo = entrada.nextLine();
+        if(usuarioPossuiSaldo.equals("n")) {
+            contaBancaria = new ContaBancaria(cliente, limitePadrao);
+        } else {
+            System.out.println("Qual o saldo do cliente?");
+            Double saldoInicialConta = Double.parseDouble(entrada.nextLine());
+            contaBancaria = new ContaBancaria(cliente, limitePadrao, saldoInicialConta);
+        }
     }
 
     private Cliente criarCliente() {
@@ -60,8 +69,8 @@ public class CaixaEletronico {
         String mensagem = "Nenhuma conta bancária cadastrada";
         if(contaBancaria != null) {
             mensagem = 
-            contaBancaria.getNomeTitular() + 
-            '\n' + 
+            contaBancaria.getNomeTitular() + '\n' + 
+            contaBancaria.getNumeroConta() + '\n' +
             "Saldo: " + contaBancaria.getSaldo();
         }
         System.out.println(mensagem);
