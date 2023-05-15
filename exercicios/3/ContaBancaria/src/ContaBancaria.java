@@ -55,12 +55,4 @@ public class ContaBancaria {
     public Integer getNumeroConta() {
         return numeroConta;
     }
-
-    public boolean executarTransferencia(double valorTransferencia, ContaBancaria contaDestino) {
-        return contaDestino.executarDeposito(valorTransferencia);
-    }
-
-    public boolean podeTransferir(double valorTransferencia) {
-        return validarSaque(valorTransferencia);
-    }
 }

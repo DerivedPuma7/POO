@@ -16,7 +16,7 @@ public class CaixaEletronico {
         while (true) {
             mostrarMenu();
             int opcao = Integer.parseInt(entrada.nextLine());
-            if (opcao == 6)
+            if (opcao == 5)
                 break;
             tratarOpcao(opcao);
         }
@@ -26,23 +26,11 @@ public class CaixaEletronico {
     public void mostrarMenu() {
         System.out.println("");
         System.out.println("1. Criar Conta");
-        if(contasCriadas()) {
-            System.out.println("2. Consultar Saldo");
-            System.out.println("3. Depositar");
-            System.out.println("4. Sacar");
-            System.out.println("5. Transferir");
-        }
-        System.out.println("6. Sair");
-    }
-
-    private boolean contasCriadas() {
-        boolean contasCriadas = true;
-        for(int i = 0; i < quantidadeContasPermitido; i++) {
-            if(! (contasBancarias[i] instanceof ContaBancaria)) {
-                contasCriadas = false;
-            }
-        }
-        return contasCriadas;
+        System.out.println("2. Consultar Saldo");
+        System.out.println("3. Depositar");
+        System.out.println("4. Sacar");
+        System.out.println("10. Debug");
+        System.out.println("5. Sair");
     }
     
     public void tratarOpcao(int opcao) {
@@ -60,9 +48,6 @@ public class CaixaEletronico {
             case 4:
                 realizarSaque();
                 break;
-            case 5:
-                realizarTransferencia();
-                break;
             default:
                 break;
         }
@@ -77,7 +62,7 @@ public class CaixaEletronico {
 
     private ContaBancaria criarConta(Cliente cliente) {
         ContaBancaria contaBancaria;
-        System.out.println("\n" + "Vamos abrir uma nova conta!");
+        System.out.println("Vamos abrir uma nova conta!");
         System.out.println("O cliente possui saldo?(Y/n)");
         String usuarioPossuiSaldo = entrada.nextLine();
         if(usuarioPossuiSaldo.equals("n")) {
@@ -87,7 +72,7 @@ public class CaixaEletronico {
             Double saldoInicialConta = Double.parseDouble(entrada.nextLine());
             contaBancaria = new ContaBancaria(cliente, limitePadrao, saldoInicialConta);
         }
-        System.out.println("Número da conta criada: " + contaBancaria.getNumeroConta());
+        System.out.println("Número da conta criada: " + contaBancaria.getNumeroConta() + '\n');
         return contaBancaria;
     }
 
@@ -140,50 +125,19 @@ public class CaixaEletronico {
         System.out.println(resultadoSaque);
     }
 
-    public void realizarTransferencia() {
-        ContaBancaria contaOrigem = getContaOrigemTransferencia();
-        ContaBancaria contaDestino = getContaDestinoTransferencia();
-        Double valorTransferencia = getValor();
-        if(! validarTransferencia(contaOrigem, valorTransferencia)) {
-            System.out.println("Não é possível realizar a transferência!");
-        }
-        Boolean transferenciaRealizada = contaOrigem.executarTransferencia(valorTransferencia, contaDestino);
-        String mensagem = "Falha na transferência!";
-        if(transferenciaRealizada) {
-            contaOrigem.executarSaque(valorTransferencia);
-            mensagem = "Transferência realizada com sucesso!";
-        }
-        System.out.println(mensagem);
-    }
-
-    private ContaBancaria getContaOrigemTransferencia() {
-        System.out.println("\n" + "Conta de origem");
-        Integer numeroContaOrigem = getNumeroConta();
-        return getContaBancaria(numeroContaOrigem);
-    }
-
-    private ContaBancaria getContaDestinoTransferencia() {
-        System.out.println("\n" + "Conta de destino");
-        Integer numeroContaDestino = getNumeroConta();
-        return getContaBancaria(numeroContaDestino);
-    }
-
-    private boolean validarTransferencia(ContaBancaria contaOrigem, Double valorTransferencia) {
-        return contaOrigem.podeTransferir(valorTransferencia);
-    }
-
     private double getValor() {
-        System.out.println("\n" + "Qual o valor?"); 
+        System.out.println("Qual o valor?"); 
         return Double.parseDouble(entrada.nextLine());
     }
 
-    private int getNumeroConta() {
-        System.out.println("\n" + "Qual número da conta?");
+    private Integer getNumeroConta() {
+        System.out.println("Qual número da conta?");
         return Integer.parseInt(entrada.nextLine());
     }
 
     private ContaBancaria getContaBancaria(Integer numeroConta) {
         for(int i = 0; i < quantidadeContasPermitido; i++) {
+            System.out.println("numeroDaConta: " + contasBancarias[i].getNumeroConta());
             if(
                 contasBancarias[i] instanceof ContaBancaria &&
                 contasBancarias[i].getNumeroConta() == numeroConta
