@@ -17,7 +17,7 @@ public class CaixaEletronico {
         while (true) {
             mostrarMenu();
             int opcao = Integer.parseInt(entrada.nextLine());
-            if (opcao == 8)
+            if (opcao == 9)
                 break;
             tratarOpcao(opcao);
         }
@@ -34,8 +34,9 @@ public class CaixaEletronico {
             System.out.println("5. Transferir");
             System.out.println("6. Listar Contas");
             System.out.println("7. Remover Conta");
+            System.out.println("8. Filtrar Contas");
         }
-        System.out.println("8. Sair");
+        System.out.println("9. Sair");
     }
 
     private boolean contasCriadas() {
@@ -65,6 +66,9 @@ public class CaixaEletronico {
                 break;
             case 7:
                 removerConta();
+                break;
+            case 8:
+                filtrarContas();
                 break;
             default:
                 break;
@@ -204,6 +208,17 @@ public class CaixaEletronico {
         return false;
     }
 
+    private void filtrarContas() {
+        String nomeCliente = getNomeCliente().toLowerCase();
+        for (ContaBancaria conta : contasBancarias) {
+            if(conta.getNomeTitular().toLowerCase().contains(nomeCliente)) {
+                System.out.println(
+                    conta.getNumeroConta() + " - " + conta.getNomeTitular()
+                );
+            }
+        }
+    }
+
     private double getValor() {
         System.out.println("\n" + "Qual o valor?"); 
         return Double.parseDouble(entrada.nextLine());
@@ -212,6 +227,11 @@ public class CaixaEletronico {
     private int getNumeroConta() {
         System.out.println("\n" + "Qual número da conta?");
         return Integer.parseInt(entrada.nextLine());
+    }
+
+    private String getNomeCliente() {
+        System.out.println("\n" + "Qual nome do cliente?");
+        return entrada.nextLine();
     }
 
     private ContaBancaria getContaBancaria(Integer numeroConta) {
