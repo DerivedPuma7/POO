@@ -97,10 +97,10 @@ public class CaixaEletronico {
         ContaBancaria contaBancaria = getContaBancaria(numeroConta);
         String mensagem = "Conta não encontrada!";
         if(contaBancaria != null) {
-            mensagem = 
-                contaBancaria.getNomeTitular() + '\n' + 
-                contaBancaria.getNumeroConta() + '\n' +
-                "Saldo: " + contaBancaria.getSaldo() + '\n';
+            mensagem = "\n" + 
+                "Cliente: " + contaBancaria.getNomeTitular() + "\n" + 
+                "Número: " + contaBancaria.getNumeroConta() + "\n" +
+                "Saldo: " + contaBancaria.getSaldo() + "\n";
         }
         System.out.println(mensagem);
     }
