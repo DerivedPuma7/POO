@@ -17,7 +17,7 @@ public class CaixaEletronico {
         while (true) {
             mostrarMenu();
             int opcao = Integer.parseInt(entrada.nextLine());
-            if (opcao == 7)
+            if (opcao == 8)
                 break;
             tratarOpcao(opcao);
         }
@@ -33,8 +33,9 @@ public class CaixaEletronico {
             System.out.println("4. Sacar");
             System.out.println("5. Transferir");
             System.out.println("6. Listar Contas");
+            System.out.println("7. Remover Conta");
         }
-        System.out.println("7. Sair");
+        System.out.println("8. Sair");
     }
 
     private boolean contasCriadas() {
@@ -61,6 +62,9 @@ public class CaixaEletronico {
                 break;
             case 6:
                 listarContas();
+                break;
+            case 7:
+                removerConta();
                 break;
             default:
                 break;
@@ -178,6 +182,28 @@ public class CaixaEletronico {
         }
     }
 
+    private void removerConta() {
+        Integer numeroConta = getNumeroConta();
+        ContaBancaria contaBancaria = getContaBancaria(numeroConta);
+        boolean podeRemover = validarRemocaoContaBancaria(contaBancaria);
+        if(! podeRemover) return;
+        int indexConta = getIndexContaBancaria(numeroConta);
+        String mensagem = "Falha ao remover conta!";
+        if(indexConta != -1) {
+            contasBancarias.remove(indexConta);
+            mensagem = "Conta bancária removida com sucesso!";
+        }
+        System.out.println(mensagem);
+    }
+
+    private boolean validarRemocaoContaBancaria(ContaBancaria conta) {
+        double saldoConta = conta.getSaldo();
+        if(saldoConta == 0) return true;
+        if(saldoConta < 0) System.out.println("Não é possível cancelar contas em débito!");
+        if(saldoConta > 0) System.out.println("Não é possível cancelar contas com saldo disponível!");
+        return false;
+    }
+
     private double getValor() {
         System.out.println("\n" + "Qual o valor?"); 
         return Double.parseDouble(entrada.nextLine());
@@ -195,5 +221,16 @@ public class CaixaEletronico {
             }
         }
         return null;
+    }
+
+    private int getIndexContaBancaria(int numeroConta) {
+        ContaBancaria conta;
+        for (int i = 0; i < contasBancarias.size(); i++) {
+            conta = contasBancarias.get(i);
+            if(conta.getNumeroConta() == numeroConta) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
