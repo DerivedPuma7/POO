@@ -1,14 +1,15 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class CaixaEletronico {
     Scanner entrada = new Scanner(System.in);
-    ContaBancaria[] contasBancarias;
+    ArrayList<ContaBancaria> contasBancarias;
     Double limitePadrao = 200.0;
     Integer quantidadeContasPermitido = 2;
     Integer quantidadeContas;
 
     public CaixaEletronico() {
-        contasBancarias = new ContaBancaria[quantidadeContasPermitido];
+        contasBancarias = new ArrayList<ContaBancaria>();
         quantidadeContas = 0;
     }
 
@@ -16,7 +17,7 @@ public class CaixaEletronico {
         while (true) {
             mostrarMenu();
             int opcao = Integer.parseInt(entrada.nextLine());
-            if (opcao == 6)
+            if (opcao == 7)
                 break;
             tratarOpcao(opcao);
         }
@@ -31,25 +32,20 @@ public class CaixaEletronico {
             System.out.println("3. Depositar");
             System.out.println("4. Sacar");
             System.out.println("5. Transferir");
+            System.out.println("6. Listar Contas");
         }
-        System.out.println("6. Sair");
+        System.out.println("7. Sair");
     }
 
     private boolean contasCriadas() {
-        boolean contasCriadas = true;
-        for(int i = 0; i < quantidadeContasPermitido; i++) {
-            if(! (contasBancarias[i] instanceof ContaBancaria)) {
-                contasCriadas = false;
-            }
-        }
-        return contasCriadas;
+        return contasBancarias.size() > 0;
     }
     
     public void tratarOpcao(int opcao) {
         switch (opcao) {
             case 1:
                 Cliente cliente = criarCliente();
-                criarContas(cliente);
+                criarConta(cliente);
                 break;
             case 2:
                 consultarSaldo();
@@ -63,15 +59,11 @@ public class CaixaEletronico {
             case 5:
                 realizarTransferencia();
                 break;
+            case 6:
+                listarContas();
+                break;
             default:
                 break;
-        }
-    }
-
-    private void criarContas(Cliente cliente) {
-        for(int i = 0; i < quantidadeContasPermitido; i++) {
-            ContaBancaria contaBancaria = criarConta(cliente);
-            contasBancarias[i] = contaBancaria;
         }
     }
 
@@ -87,6 +79,7 @@ public class CaixaEletronico {
             Double saldoInicialConta = Double.parseDouble(entrada.nextLine());
             contaBancaria = new ContaBancaria(cliente, limitePadrao, saldoInicialConta);
         }
+        contasBancarias.add(contaBancaria);
         System.out.println("Número da conta criada: " + contaBancaria.getNumeroConta());
         return contaBancaria;
     }
@@ -172,6 +165,16 @@ public class CaixaEletronico {
         return contaOrigem.podeTransferir(valorTransferencia);
     }
 
+    private void listarContas() {
+        String mensagem;
+        for (ContaBancaria conta : contasBancarias) {
+            mensagem = "\n" + 
+                "Número: " + conta.getNumeroConta() + "\n" +
+                "Cliente: " + conta.getNomeTitular();
+            System.out.println(mensagem);
+        }
+    }
+
     private double getValor() {
         System.out.println("\n" + "Qual o valor?"); 
         return Double.parseDouble(entrada.nextLine());
@@ -183,12 +186,9 @@ public class CaixaEletronico {
     }
 
     private ContaBancaria getContaBancaria(Integer numeroConta) {
-        for(int i = 0; i < quantidadeContasPermitido; i++) {
-            if(
-                contasBancarias[i] instanceof ContaBancaria &&
-                contasBancarias[i].getNumeroConta() == numeroConta
-            ) {
-                return contasBancarias[i];
+        for (ContaBancaria conta : contasBancarias) {
+            if(conta.getNumeroConta() == numeroConta) {
+                return conta;
             }
         }
         return null;
