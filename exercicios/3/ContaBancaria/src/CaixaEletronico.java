@@ -77,7 +77,7 @@ public class CaixaEletronico {
 
     private ContaBancaria criarConta(Cliente cliente) {
         ContaBancaria contaBancaria;
-        System.out.println("Vamos abrir uma nova conta!");
+        System.out.println("\n" + "Vamos abrir uma nova conta!");
         System.out.println("O cliente possui saldo?(Y/n)");
         String usuarioPossuiSaldo = entrada.nextLine();
         if(usuarioPossuiSaldo.equals("n")) {
@@ -87,7 +87,7 @@ public class CaixaEletronico {
             Double saldoInicialConta = Double.parseDouble(entrada.nextLine());
             contaBancaria = new ContaBancaria(cliente, limitePadrao, saldoInicialConta);
         }
-        System.out.println("Número da conta criada: " + contaBancaria.getNumeroConta() + '\n');
+        System.out.println("Número da conta criada: " + contaBancaria.getNumeroConta());
         return contaBancaria;
     }
 
