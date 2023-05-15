@@ -137,8 +137,9 @@ public class CaixaEletronico {
         ContaBancaria contaOrigem = getContaOrigemTransferencia();
         ContaBancaria contaDestino = getContaDestinoTransferencia();
         Double valorTransferencia = getValor();
-        if(! validarTransferencia(contaOrigem, valorTransferencia)) {
+        if(! validarTransferencia(contaOrigem, contaDestino, valorTransferencia)) {
             System.out.println("Não é possível realizar a transferência!");
+            return;
         }
         Boolean transferenciaRealizada = contaOrigem.executarTransferencia(valorTransferencia, contaDestino);
         String mensagem = "Falha na transferência!";
@@ -161,7 +162,9 @@ public class CaixaEletronico {
         return getContaBancaria(numeroContaDestino);
     }
 
-    private boolean validarTransferencia(ContaBancaria contaOrigem, Double valorTransferencia) {
+    private boolean validarTransferencia(ContaBancaria contaOrigem, ContaBancaria contaDestino, Double valorTransferencia) {
+        if(contaOrigem == null) return false;
+        if(contaDestino == null) return false;
         return contaOrigem.podeTransferir(valorTransferencia);
     }
 
